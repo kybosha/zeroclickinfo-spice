@@ -3,21 +3,7 @@ package DDG::Spice::Transit::SEPTA;
 
 use strict;
 use DDG::Spice;
-use YAML qw ( Load );
-
-primary_example_queries "next train from Villanova to Paoli";
-secondary_example_queries "train times to paoli from Villanova";
-description "Lookup the next SEPTA train going your way";
-name "SEPTA";
-source "SEPTA";
-code_url "https://github.com/duckduckgo/zeroclickinfo-spice/blob/master/lib/DDG/Spice/Transit/SEPTA.pm";
-topics "everyday";
-category "time_sensitive";
-attribution web => [ 'https://www.duckduckgo.com', 'DuckDuckGo' ],
-            github => [ 'https://github.com/duckduckgo', 'DuckDuckGo'],
-            twitter => ['http://twitter.com/duckduckgo', 'DuckDuckGo'],
-            github => ['https://github.com/mattr555', 'mattr555'],
-            twitter => ['https://twitter.com/mattr555', 'mattr555'];
+use YAML::XS 'LoadFile';
 
 spice to => 'http://www3.septa.org/hackathon/NextToArrive/$1/$2/5/';
 spice from => '(.*)/(.*)';
@@ -26,13 +12,13 @@ spice proxy_cache_valid => "418 1d";
 
 triggers any => "next train", "train times", "train schedule", "septa";
 
-my %stops = yaml_to_stops(scalar share('stops.yml')->slurp);
+my %stops = yaml_to_stops(share('stops.yml'));
 
 #add the canonical names to the arrays in the stop hash
 sub yaml_to_stops {
     my $yaml = shift;
 
-    my %hash = %{Load($yaml)};
+    my %hash = %{LoadFile($yaml)};
     foreach my $key (keys %hash) {
         if (my $value = $hash{$key}) {
             #there are other aliases, add the canonical name to that array

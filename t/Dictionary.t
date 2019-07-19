@@ -24,6 +24,18 @@ ddg_spice_test(
         call_type => 'include',
         caller => 'DDG::Spice::Dictionary::Definition'
     ),
+    'define "round robin"' => test_spice(
+        '/js/spice/dictionary/definition/round%20robin',
+        call_type => 'include',
+        caller => 'DDG::Spice::Dictionary::Definition'
+    )
+);
+
+alt_to_test('DDG::Spice::Dictionary::Definition', [qw(
+	audio
+	hyphenation
+	reference
+	pronunciation)]
 );
 
 done_testing;

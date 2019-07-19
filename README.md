@@ -1,12 +1,24 @@
-# DuckDuckHack Spice Instant Answers [![Build Status](https://travis-ci.org/duckduckgo/zeroclickinfo-spice.png?branch=bttf)](https://travis-ci.org/duckduckgo/zeroclickinfo-spice)
+# In Maintenance [![Build Status](https://travis-ci.org/duckduckgo/zeroclickinfo-spice.svg?branch=master)](https://travis-ci.org/duckduckgo/zeroclickinfo-spice)
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/duckduckgo/zeroclickinfo-spice?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+DuckDuckHack is now in maintenance mode. We are only accepting pull requests for essential bug fixes. For more information see [duckduckhack.com](https://duckduckhack.com). 
 
-This repository contains all the Spice instant answers. If you are developing a Spice instant answer you will need to fork this repository.
+## What are essential bug fixes?
 
-**If you would like to contribute to DuckDuckHack, please start by reading the [DuckDuckHack Documentation](https://duck.co/duckduckhack/ddh-intro).**
+Any changes necessary to keep existing Instant Answers functioning correctly and as expected. For example:
 
-------
+  - Updating the URL for a Spice Instant Answer when the API changes
+  - Correcting a Perl or JavaScript logic error
+  - Fixing CSS that's causing the display to break
 
-### Spice Instant Answer Example
-![App Search Example](https://raw.githubusercontent.com/duckduckgo/duckduckgo-documentation/master/duckduckhack/assets/spice_readme_example.png)
+Any other changes will not be accepted. For example:
+
+  - spelling/comment changes
+  - unsolicited improvements, changes, and code refactoring
+
+## Need to report a bug?
+If you find a bug or relevancy issue, the **best** way to report this is via the Feedback button on the DuckDuckGo.com search results page. These issues are compiled and reviewed daily.
+
+## Have a suggestion or idea?
+The **best** way to report these is also via the Feedback button on the DuckDuckGo.com search results page.
+
+You can also share your thoughts with our community on [Reddit](https://www.reddit.com/r/duckduckgo/).

@@ -6,12 +6,12 @@
         }
 
         Spice.add({
-            id: 'path',
+            id: 'transit_path',
             name: 'PATH',
             signal: 'high',
             data: api_result.routes,
             meta: {
-                heading: api_result.origin + " to " + api_result.destination,
+                primaryText: api_result.origin + " to " + api_result.destination,
                 sourceUrl: "http://www.panynj.gov/path/",
                 sourceName: "PATH"
             },

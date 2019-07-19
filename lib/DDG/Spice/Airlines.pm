@@ -4,24 +4,12 @@ package DDG::Spice::Airlines;
 use strict;
 use DDG::Spice;
 
-primary_example_queries "AA 102";
-secondary_example_queries "Delta 3684";
-description "Flight information";
-name "Flight Info";
-icon_url "/i/flightstats.com.ico";
-source "FlightStats";
-code_url "https://github.com/duckduckgo/zeroclickinfo-spice/blob/master/lib/DDG/Spice/Airlines.pm";
-topics "economy_and_finance", "travel", "everyday";
-category "time_sensitive";
-attribution web => [ 'https://www.duckduckgo.com', 'DuckDuckGo' ],
-            github => [ 'https://github.com/duckduckgo', 'DuckDuckGo'],
-            twitter => ['http://twitter.com/duckduckgo', 'DuckDuckGo'];
-
 spice to => 'https://api.flightstats.com/flex/flightstatus/rest/v2/jsonp/flight/status/$1/$2/arr/$3/$4/$5?hourOfDay=$6&utc=true&appId={{ENV{DDG_SPICE_FLIGHTS_API_ID}}}&appKey={{ENV{DDG_SPICE_FLIGHTS_APIKEY}}}&callback={{callback}}';
 spice from => '(.*)/(.*)/(.*)/(.*)/(.*)/(.*)';
 spice proxy_cache_valid => '418 1d';
 
-triggers query_lc => qr/^(\d+)\s+(.*?)(?:[ ]air.*?)?$|^(.*?)(?:[ ]air.*?)?\s+(\d+)$/;
+triggers any => '///***never trigger***///';
+# triggers query_lc => qr/^(\d+)\s+(.*?)(?:[ ]air.*?)?$|^(.*?)(?:[ ]air.*?)?\s+(\d+)$/;
 
 # Get the list of airlines and strip out the words.
 my %airlines = ();
@@ -63,16 +51,13 @@ handle query_lc => sub {
 
     my $query = $_;
 
-    # get the current time, minus six hours
-    # the API requires a date/time, and this allows us to search for all flights that 
-    # arrived six hours prior to the current time and flights that will arrive up to
-    # 18 hours ahead of the current time
+    # get the current time
     my ($second, $minute, $hour, $dayOfMonth,
-        $month, $year, $dayOfWeek, $dayOfYear, $daylightSavings) = gmtime(time - 21600);
+        $month, $year, $dayOfWeek, $dayOfYear, $daylightSavings) = gmtime(time);
                 
     $month += 1;
     $year += 1900;
-
+    
     # 102 AA
     if($query =~ /^(\d+)\s*(.*?)(?:[ ]air.*?)?$/) {
         return checkAirlines($airlines{$2}, $1, $year, $month, $dayOfMonth, $hour);

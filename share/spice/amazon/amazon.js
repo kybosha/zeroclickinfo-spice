@@ -1,58 +1,92 @@
 (function(env) {
     "use strict";
-
     env.ddg_spice_amazon = function(api_result) {
 
-        if (!api_result || !api_result.results || !api_result.results.length || api_result.results.length == 0) {
+        if (!api_result || !api_result.results || !api_result.results.length) {
             return Spice.failed('products');
         }
 
+        var templates = {
+            group: 'products',
+            options: {
+                buy: 'products_amazon_buy',
+                badge: 'products_amazon_badge',
+                rating: false
+            }
+        };
+
+        if (api_result.results.length > 1) {
+            // var itemTemplate = 'products_item';
+            var itemTemplate = Spice.amazon.branded_products_item;
+            templates = {
+                item: itemTemplate,
+                options: {
+                    buy: 'products_amazon_buy',
+                    badge: 'products_amazon_badge',
+                    rating: DDG.page.ads && DDG.page.ads.adxExperiment === 'prod_rr_v1'
+                }
+            };
+        }
+
+        var source = api_result.source;
+        
         Spice.add({
             id: 'products',
             name: 'Products',
             data: api_result.results,
+            answerType: 'Products',
             allowMultipleCalls: true,
-            model: 'Product',
             meta: {
-                itemType: 'Products',
-                sourceName: 'Amazon',
+                secondaryText: '<a class="tx-clr--grey-dark" href="https://duck.co/help/company/advertising-and-affiliates">' + l('Ad') + '</a>',
+                alwaysShowSecondaryText: true,
+                alwaysShowMetabar: true,
+                hideAttribution: true,
+                iconOnlyMobile: true,
+                hideModeSwitch: DDG.device.isMobile,
+                sourceNoTransform: true,
+                sourceName: source,
                 sourceUrl: api_result.more_at,
                 sourceIcon: true,
+                rerender: [
+                    'reviewCount'
+                ],
                 next: api_result.next
             },
-            templates: {
-                group: 'products',
-                options: {
-                    buy: 'products_amazon_buy'
-                }
+            templates: templates,
+            relevancy: {
+                dup: ['ASIN','img_m','img']
+            },
+            normalize: function(item) {
+                item.showBadge = item.is_prime;
+                item.showBrand = item.brand && item.brand_query;
+
+                return item;
             },
             onItemShown: function(item) {
-                if (item.loadedRatings) { return; }
 
-                var arg = item.rating,
-                    url = '/m.js?r=';
+                if (DDG.page.ads && DDG.page.ads.adxExperiment === 'prod_rr_v1') {
+                    var arg = item.rating,
+                        url = '/m.js?t=rating&r=';
 
-                arg = arg.replace(/(?:.com.au|.com.br|.cn|.fr|.de|.in|.it|.co.jp|.jp|.mx|.es|.co.uk|.com|.ca?)/i, '');
-                arg = arg.replace('http://www.amazon/reviews/iframe?', '');
+                    if (item.loadedReviews) { return; }
 
-                $.getJSON(url + encodeURIComponent(arg), function(r) {
-                    if (r.stars.match(/stars-(\d)-(\d)/)) {
-                        item.rating = RegExp.$1 + "." + RegExp.$2;
-                    }
-                    item.reviewCount = r.reviews;
+                    // arg = arg.replace(/(?:.com.au|.com.br|.cn|.fr|.de|.in|.it|.co.jp|.jp|.mx|.es|.co.uk|.com|.ca?)/i, '');
+                    // arg = arg.replace('http://www.amazon/reviews/iframe?', '');
 
-                    // this is kind of dirty, relies on the item.$html being the
-                    // memory ref to the tile dom, and re-renders the stars/renders block of html
-                    // now that we have updated ratings data:
-                    if (item.$html) {
-                        var $ratingsWrapper = item.$html.find('.tile__rating,.detail__rating');
-                        if ($ratingsWrapper && $ratingsWrapper.length) {
-                            $ratingsWrapper.html(Handlebars.helpers.starsAndReviews(item.rating, item.reviewCount, item.url_review, true));
+                    $.getJSON(url + encodeURIComponent(arg), function(r) {
+                        if (!r) { return; }
+
+                        if (r.stars) {
+                            item.set({ rating:  r.stars });
                         }
-                    }
-                });
 
-                item.loadedRatings = true;
+                        if (r.reviews) {
+                            item.set({ reviewCount:  r.reviews });
+                        }
+                    });
+
+                    item.loadedReviews = 1;
+                }
             }
         });
     }

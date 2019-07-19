@@ -4,18 +4,34 @@ package DDG::Spice::Dictionary::Definition;
 use strict;
 use DDG::Spice;
 
-description "Get the definition of a word";
-name "Dictionary";
-primary_example_queries "define inundate";
-secondary_example_queries "definition of dictionary";
-topics "everyday";
-category "reference";
-code_url "https://github.com/duckduckgo/zeroclickinfo-spice/blob/master/lib/DDG/Spice/Dictionary/Definition.pm";
-attribution web => ['http://duckduckgo.com', 'DuckDuckGo'],
-            twitter => ['http://twitter.com/duckduckgo', 'DuckDuckGo'];
-
-spice to => 'http://api.wordnik.com/v4/word.json/$1/definitions?includeRelated=true&includeTags=true&limit=3&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}';
+spice to => 'http://api.wordnik.com/v4/word.json/$1/definitions?includeRelated=true&includeTags=true&limit=3&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}&useCanonical=true';
 spice proxy_cache_valid => '200 30d';
+spice wrap_jsonp_callback => 1;
+
+spice alt_to => {
+	audio => {
+		to => 'http://api.wordnik.com/v4/word.json/$1/audio?limit=10&useCanonical=true&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}',
+		proxy_cache_valid => '418 1d',
+		content_type_javascript => 1,
+	},
+	hyphenation => {
+		to => 'http://api.wordnik.com/v4/word.json/$1/hyphenation?includeRelated=true&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}&useCanonical=true',
+		content_type_javascript => 1,
+	},
+	pronunciation => {
+		to => 'http://api.wordnik.com/v4/word.json/$1/pronunciations?limit=1&useCanonical=true&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}',
+		content_type_javascript => 1,
+	},
+	reference => {
+		to => 'http://api.wordnik.com/v4/word.json/$1/definitions?includeRelated=true&includeTags=true&limit=3&api_key={{ENV{DDG_SPICE_WORDNIK_APIKEY}}}&callback={{callback}}&useCanonical=true',
+		proxy_cache_valid => '200 30d',
+		content_type_javascript => 1
+	}
+};
+
+spice upstream_timeouts => +{ connect => '200ms',
+                              send => '200ms',
+                              read => '500ms' };
 
 triggers startend => (
     "define",
@@ -31,7 +47,15 @@ triggers startend => (
 
 
 handle remainder => sub {
-    return lc($_) if $_;
+    if ($_) {
+        # Remove quotes from the string since Wordnik does not have
+        # any words that start or end with quotes.
+        $_ =~ tr/"//d;
+
+        # Make sure to transform the string to lowercase as well.
+        return lc($_);
+    }
+
     return;
 };
 

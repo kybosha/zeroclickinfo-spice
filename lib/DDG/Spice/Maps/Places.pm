@@ -10,32 +10,18 @@ spice to => 'https://duckduckgo.com/local.js?q=$1&cb={{callback}}';
 spice proxy_cache_valid => "418 1d";
 spice is_cached => 0;
 
-triggers startend => (
-    'local',
-    'near',
-    'near me',
-    'around',
-    'around me',
-    'here',
-    'locally',
-    'nearby',
-    'close',
-    'closest',
-    'nearest',
+my $categories_re = share('categories_re')->slurp;
+my $places_re = qr/(local|near|near me|around|around me|here|locally|nearby|close|closest|nearest|locations?|restaurants?)/;
+triggers query_lc => qr/(^$places_re\b|\b$places_re$|^$categories_re\b)/s;
 
-    'locations',
-    'location',
+my %skip_remainders = map {$_ => 0} ('current', 'time', 'weather', 'forecast');
 
-    'restaurant',
-    'restaurants',
-);
-
-my %skip_remainders = map {$_ => 0} ('current', 'time');
-
-handle remainder => sub {
-    return $_ if $_ && !exists($skip_remainders{$_});
-    return;
+handle query_lc => sub {
+    my $query = $_;
+    foreach my $qw (split(/\s/, $query)) {
+        return if exists($skip_remainders{$qw});
+    }
+    return $query if $query;
 };
 
 1;
-

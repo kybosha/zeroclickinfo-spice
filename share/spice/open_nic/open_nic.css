@@ -1,0 +1,48 @@
+/* main formatting */
+.zci--open_nic .opennic__list {
+    height:30px;
+    line-height:30px;
+    font-size:13px;
+}
+
+.zci--open_nic .opennic__subblocks {
+    float:left;
+    height:inherit;
+}
+
+/* cell-specific */
+.zci--open_nic .opennic__ip {
+    font-size:16px;
+    width:350px;
+}
+
+.zci--open_nic .opennic__km {
+    width:70px;
+}
+
+.zci--open_nic .opennic__stat {
+    width:89px;
+}
+
+.zci--open_nic .opennic__loc {
+    width:60px;
+}
+
+/* removes columns depending on the screen's size */
+@media only screen and (max-width: 695px) {
+    .zci--open_nic .opennic__loc {
+        display:none;
+    }
+}
+
+@media only screen and (max-width: 635px) {
+    .zci--open_nic .opennic__stat {
+        display:none;
+    }
+}
+
+@media only screen and (max-width: 477px) {
+    .zci--open_nic .opennic__km {
+        display:none;
+    }
+}

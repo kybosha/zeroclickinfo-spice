@@ -1,0 +1,103 @@
+.zci--cryptocurrency .zci__body {
+    margin: 0;
+    box-sizing: border-box;
+    width: 80%;
+}
+
+.zci--cryptocurrency #subtitle {
+    margin: 0.4em 0 1.2em 0;
+}
+
+.zci--cryptocurrency #zci__more-at {
+    margin: 1.1em 0 0.2em 0;
+}
+
+.zci--cryptocurrency .shadow {
+    box-shadow: 1px 1px 5px 0 #e5e5e5;
+}
+
+.dark-bg .zci--cryptocurrency .shadow {
+    box-shadow: none;
+}
+
+.zci--currency .frm__select:after {
+    height: 100%;
+    width: 30px;
+    margin-top: 0;
+    padding-top: 1.4em;
+    top: 0;
+    right: 0;
+    background-color: #fafafa;
+}
+.zci--currency .frm__select:hover:after {
+    background-color: #fff;
+}
+
+
+.zci--cryptocurrency .frm > div {
+    float: left;
+}
+
+.zci--cryptocurrency .input__wrap {
+    width: 45%;
+}
+
+.zci--cryptocurrency .frm__input,
+.zci--cryptocurrency .frm__select {
+    display: block;
+    width: 100%;
+    height: 3em;
+    line-height: 3;
+    padding: 0;
+    font-weight: bold;
+    text-align: center;
+    border-color: #c9c9c9;
+}
+
+.zci--cryptocurrency .frm__input {
+    border-bottom: none;
+    border-right: 1px solid #c9c9c9;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    font-size: 1.7em;
+    line-height: 1.7em;
+    height: 2.1em !important;
+}
+
+.zci--cryptocurrency .frm__select {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top-color: #e0e0e0;
+    border-left-color: #c9c9c9;
+}
+
+.zci--cryptocurrency .frm__select:after {
+    height: 100%;
+    width: 30px;
+    margin-top: 0;
+    padding-top: 1.4em;
+    top: 0;
+    right: 0;
+    background-color: #fafafa;
+}
+.zci--cryptocurrency .frm__select:hover:after {
+    background-color: #fff;
+}
+
+.zci--cryptocurrency .frm__select select {
+    height: 3em !important;
+}
+
+.zci--cryptocurrency .equals-sign {
+    width: 10%;
+    vertical-align: top;
+    text-align: center;
+    font-size: 2em;
+    line-height: 1.8em;
+    height: 1.8em;
+}
+
+/* Mobile */
+.is-mobile .zci--cryptocurrency .zci__body {
+    width: 100%;
+}
